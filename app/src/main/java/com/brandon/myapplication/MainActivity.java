@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity
 
         } else if (id == R.id.nav_list) {
             ft = getSupportFragmentManager().beginTransaction();
-            ft.replace(R.id.category_fragment,new com.brandon.myapplication.ListFragment());
+            ft.replace(R.id.category_fragment,new CategoryFragment());
             ft.commit();
         } else if (id == R.id.nav_map) {
 
