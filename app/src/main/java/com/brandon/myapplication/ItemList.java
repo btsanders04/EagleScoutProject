@@ -26,10 +26,9 @@ public class ItemList {
         listData.add(new Item("Spillway", "It is not heavily harvested and no varieties or hybrids have been created. The wood of the Winged elm is however put to good use in making furniture, particularly when curved pieces are required. " +
                 "The wood is quite strong and does not split easily. The wood exhibits interesting patterns, making it useful as flooring. The main reason that there is not more of a commercial market for the Winged elm is probably because there are so many other hardwood species.",Category.OTHER));
         listData.add(new Item("Gas Line", "maybe id something else??",Category.OTHER));
-        listData = new ArrayList<Item>();
         listData.add(new Item("BlackBerry", "Red oak wood is one of the main type of wood used for timber in the eastern United States. Because of its ability to tolerate many conditions, it is planted in many cities and urban areas. It is often planted for landscaping.\n" +
                 "A very large Northern Red Oak is located in Ashford, Connecticut the trunk's diameter is 8 m (26 ft) \n" +
-                "Most species of oaks live over 200 years. There are certain trees that can survive over a thousand years.\n",Category.OTHER));
+                "Most species of oaks live over 200 years. There are certain trees that can survive over a thousand years.\n",Category.PLANTS));
         listData.add(new Item("Poison Ivy", "Seeds are eaten by several species of birds. The bark is occasionally food for rabbits, beavers, and porcupines. \n" +
                 "Cavity excavating and nesting birds often use White Ash. \n" +
                 "This tree attracts wood ducks, bobwhites, purples finches, pine grosbeaks, fox squirrels, rabbits, beavers, mice, and porcupines. \n" +
@@ -59,7 +58,7 @@ public class ItemList {
     }
 
     public ArrayList<Item> getCategoryListData(String category) {
-       ArrayList<Item> categoryListData = new ArrayList<Item>();
+       ArrayList<Item> categoryListData = new ArrayList<>();
         for(Item i : listData){
             if(i.getCategory().toString().equalsIgnoreCase(category)){
                 categoryListData.add(i);

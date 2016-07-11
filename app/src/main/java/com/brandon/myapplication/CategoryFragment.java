@@ -1,8 +1,6 @@
 package com.brandon.myapplication;
 
 import android.os.Bundle;
-import android.os.Parcel;
-import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -32,19 +30,19 @@ public class CategoryFragment extends Fragment {
         System.out.println("Setting up Tabs!!");
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tabs);
         itemList =  new ItemList();
+        Bundle args = new Bundle();
+        ListFragment listFrag = new ListFragment();
 
         for(Category c : Category.values()){
             tabLayout.addTab(tabLayout.newTab().setText(c.toString()));
         }
 
+        args.putParcelableArrayList("key", itemList.getCategoryListData(tabLayout.getTabAt(0).getText().toString()));
 
+        listFrag.setArguments(args);
 
         android.support.v4.app.FragmentTransaction ft = getFragmentManager().beginTransaction();
-        Bundle args = new Bundle();
-        args.putParcelableArrayList(tabLayout.getTabAt(0).getText().toString(), itemList.getCategoryListData(tabLayout.getTabAt(0).getText().toString()));
-        ListFragment listFrag = new ListFragment();
-        listFrag.setArguments(args);
-        ft.replace(R.id.list_fragment, new ListFragment());
+        ft.replace(R.id.activity_fragment, listFrag);
         ft.commit();
 //        FragmentManager manager = getFragmentManager();
 //        ViewPagerAdapter adapter = new ViewPagerAdapter(manager);
@@ -64,9 +62,10 @@ public class CategoryFragment extends Fragment {
                 ft = getFragmentManager().beginTransaction();
                 Bundle args = new Bundle();
                 ListFragment listFrag = new ListFragment();
+
                 args.putParcelableArrayList("key", itemList.getCategoryListData(tab.getText().toString()));
                 listFrag.setArguments(args);
-                ft.replace(R.id.list_fragment,listFrag);
+                ft.replace(R.id.activity_fragment,listFrag);
                 ft.commit();
             }
 

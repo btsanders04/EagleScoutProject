@@ -1,5 +1,6 @@
 package com.brandon.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.view.GravityCompat;
@@ -7,17 +8,33 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.TextView;
+
+import com.google.android.gms.common.api.CommonStatusCodes;
+import com.google.android.gms.vision.barcode.Barcode;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
+
+    private TextView statusMessage;
+    private TextView barcodeValue;
+
+    private static final int RC_BARCODE_CAPTURE = 9001;
+    private static final String TAG = "BarcodeMain";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+
+
+        statusMessage = (TextView)findViewById(R.id.status_message);
+        barcodeValue = (TextView)findViewById(R.id.barcode_value);
+
         setSupportActionBar(toolbar);
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
@@ -70,7 +87,10 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.nav_scan) {
-            // Handle the camera action
+            ft = getSupportFragmentManager().beginTransaction();
+            ft.replace(R.id.activity_fragment,new BarcodeDetectorFragment());
+            ft.commit();
+
 
         } else if (id == R.id.nav_list) {
             ft = getSupportFragmentManager().beginTransaction();
@@ -85,5 +105,27 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (requestCode == RC_BARCODE_CAPTURE) {
+            if (resultCode == CommonStatusCodes.SUCCESS) {
+                if (data != null) {
+                    Barcode barcode = data.getParcelableExtra(BarcodeDetectorFragment.BarcodeObject);
+                    statusMessage.setText(R.string.barcode_success);
+                    barcodeValue.setText(barcode.displayValue);
+                    Log.d(TAG, "Barcode read: " + barcode.displayValue);
+                } else {
+                    statusMessage.setText(R.string.barcode_failure);
+                    Log.d(TAG, "No barcode captured, intent data is null");
+                }
+            } else {
+                statusMessage.setText(String.format(getString(R.string.barcode_error),
+                        CommonStatusCodes.getStatusCodeString(resultCode)));
+            }
+        }
+        else {
+            super.onActivityResult(requestCode, resultCode, data);
+        }
     }
 }

@@ -4,6 +4,8 @@
     android:layout_height="wrap_content"
     android:paddingLeft="?android:attr/expandableListPreferredItemPaddingLeft"
     android:textSize="20sp"
+    android:gravity="center_vertical"
     android:textAllCaps="false"
-    android:elevation="8dp">
+    android:elevation="4dp"
+    android:minHeight="?android:attr/listPreferredItemHeight" >
 </TextView>
