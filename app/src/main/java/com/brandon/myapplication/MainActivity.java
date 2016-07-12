@@ -89,12 +89,12 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.nav_scan) {
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.activity_fragment,new BarcodeDetectorFragment());
+            ft.addToBackStack(null);
             ft.commit();
-
-
         } else if (id == R.id.nav_list) {
             ft = getSupportFragmentManager().beginTransaction();
             ft.replace(R.id.category_fragment,new CategoryFragment());
+            ft.addToBackStack(null);
             ft.commit();
         } else if (id == R.id.nav_map) {
 
@@ -105,27 +105,5 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == RC_BARCODE_CAPTURE) {
-            if (resultCode == CommonStatusCodes.SUCCESS) {
-                if (data != null) {
-                    Barcode barcode = data.getParcelableExtra(BarcodeDetectorFragment.BarcodeObject);
-                    statusMessage.setText(R.string.barcode_success);
-                    barcodeValue.setText(barcode.displayValue);
-                    Log.d(TAG, "Barcode read: " + barcode.displayValue);
-                } else {
-                    statusMessage.setText(R.string.barcode_failure);
-                    Log.d(TAG, "No barcode captured, intent data is null");
-                }
-            } else {
-                statusMessage.setText(String.format(getString(R.string.barcode_error),
-                        CommonStatusCodes.getStatusCodeString(resultCode)));
-            }
-        }
-        else {
-            super.onActivityResult(requestCode, resultCode, data);
-        }
     }
 }

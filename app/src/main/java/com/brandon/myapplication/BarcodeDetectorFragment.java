@@ -95,16 +95,12 @@ public class BarcodeDetectorFragment extends Fragment{
         view.setOnTouchListener(new View.OnTouchListener() {
             public boolean onTouch(View v, MotionEvent event) {
 
-                if(event.getAction() == MotionEvent.ACTION_MOVE){
+                boolean b = scaleGestureDetector.onTouchEvent(event);
 
+                boolean c = gestureDetector.onTouchEvent(event);
+                System.out.println("ON TOUCH EVENT: b: " + b + " c: " + c);
 
-                    boolean b = scaleGestureDetector.onTouchEvent(event);
-
-                    boolean c = gestureDetector.onTouchEvent(event);
-                    System.out.println("ON TOUCH EVENT: b: " + b + " c: " + c);
-                    return b || c || getActivity().onTouchEvent(event);
-                }
-                return true;
+                return b || c || getActivity().onTouchEvent(event);
             }
         });
         Snackbar.make(mGraphicOverlay, "Tap to capture. Pinch/Stretch to zoom",
@@ -341,10 +337,16 @@ public class BarcodeDetectorFragment extends Fragment{
             System.out.println(barcode);
             if (barcode != null) {
                 Log.d(TAG,"barcode found");
-                Intent data = new Intent();
-                data.putExtra(BarcodeObject, barcode);
-                getActivity().setResult(CommonStatusCodes.SUCCESS, data);
-                getActivity().finish();
+
+
+                Bundle args = new Bundle();
+                args.putParcelable(BarcodeObject, barcode);
+                android.support.v4.app.FragmentTransaction ft = null;
+                ft = getFragmentManager().beginTransaction();
+                Fragment frag = new CategoryFragment();
+                frag.setArguments(args);
+                ft.replace(R.id.category_fragment,frag);
+                ft.commit();
             }
             else {
                 Log.d(TAG, "barcode data is null");

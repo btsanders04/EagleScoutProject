@@ -23,11 +23,11 @@ import java.util.List;
 public class ListFragment extends Fragment {
 
     List<Item> categoryItemList;
-
+    Integer POSITION_DEFAULT = -1;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        System.out.println("Frag one implemented!");
+        System.out.println("List Fragment implemented!");
 
         return inflater.inflate(R.layout.list_view, container, false);
     }
@@ -35,14 +35,17 @@ public class ListFragment extends Fragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
 
-        categoryItemList = getArguments().getParcelableArrayList("key");
+        categoryItemList = getArguments().getParcelableArrayList(CategoryFragment.LIST_DATA_KEY);
         CustomExpandableListAdapter listAdapter = new CustomExpandableListAdapter(this.getContext(), categoryItemList);
         ;
         ExpandableListView expListView = (ExpandableListView) view.findViewById(R.id.list_view);
-        ;
+        Integer position = getArguments().getInt(CategoryFragment.POSITION,POSITION_DEFAULT);
+        System.out.println("Item position is " + position);
+
         expListView.setAdapter(listAdapter);
-
-
+        if(position != POSITION_DEFAULT) {
+            expListView.expandGroup(position);
+        }
     }
 
 
