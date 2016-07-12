@@ -13,6 +13,7 @@ import android.content.pm.PackageManager;
 import android.hardware.Camera;
 import android.os.Build;
 import android.support.annotation.NonNull;
+import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -342,6 +343,8 @@ public class BarcodeDetectorFragment extends Fragment{
                 Bundle args = new Bundle();
                 args.putParcelable(BarcodeObject, barcode);
                 android.support.v4.app.FragmentTransaction ft = null;
+                NavigationView navigationView = (NavigationView) getActivity().findViewById(R.id.nav_view);
+                navigationView.setCheckedItem(R.id.nav_list);
                 ft = getFragmentManager().beginTransaction();
                 Fragment frag = new CategoryFragment();
                 frag.setArguments(args);
