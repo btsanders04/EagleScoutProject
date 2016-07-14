@@ -25,6 +25,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 
@@ -33,7 +34,6 @@ import com.brandon.myapplication.ui.camera.CameraSourcePreview;
 import com.brandon.myapplication.ui.camera.GraphicOverlay;
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.GoogleApiAvailability;
-import com.google.android.gms.common.api.CommonStatusCodes;
 import com.google.android.gms.vision.MultiProcessor;
 import com.google.android.gms.vision.barcode.Barcode;
 import com.google.android.gms.vision.barcode.BarcodeDetector;
@@ -67,6 +67,8 @@ public class BarcodeDetectorFragment extends Fragment{
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
 
+    private boolean useFlash = false;
+    private boolean autoFocus = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
@@ -82,8 +84,24 @@ public class BarcodeDetectorFragment extends Fragment{
 
         mPreview = (CameraSourcePreview) view.findViewById(R.id.preview);
         mGraphicOverlay = (GraphicOverlay<BarcodeGraphic>) view.findViewById(R.id.graphicOverlay);
-        boolean autoFocus = true;
-        boolean useFlash = false;
+        final ImageButton ib = (ImageButton) view.findViewById(R.id.flash_light);
+
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                useFlash=!useFlash;
+
+                if(useFlash) {
+                    ib.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_on_black));
+                    mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_TORCH);
+                }
+                else {
+                    ib.setImageDrawable(getResources().getDrawable(R.drawable.ic_flash_off_black));
+                    mCameraSource.setFlashMode(Camera.Parameters.FLASH_MODE_OFF);
+                }
+            }
+        });
+
         int rc = ActivityCompat.checkSelfPermission(this.getActivity(), android.Manifest.permission.CAMERA);
         if (rc == PackageManager.PERMISSION_GRANTED) {
             createCameraSource(autoFocus, useFlash);
@@ -99,7 +117,6 @@ public class BarcodeDetectorFragment extends Fragment{
                 boolean b = scaleGestureDetector.onTouchEvent(event);
 
                 boolean c = gestureDetector.onTouchEvent(event);
-                System.out.println("ON TOUCH EVENT: b: " + b + " c: " + c);
 
                 return b || c || getActivity().onTouchEvent(event);
             }
@@ -330,7 +347,6 @@ public class BarcodeDetectorFragment extends Fragment{
     private boolean onTap(float rawX, float rawY) {
 
         //TODO: use the tap position to select the barcode.
-        System.out.println("ONTAP");
         BarcodeGraphic graphic = mGraphicOverlay.getFirstGraphic();
         Barcode barcode = null;
         if (graphic != null) {
@@ -365,7 +381,6 @@ public class BarcodeDetectorFragment extends Fragment{
 
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
-            System.out.println("CaptureGestureListener");
             return onTap(e.getRawX(), e.getRawY()) || super.onSingleTapConfirmed(e);
         }
     }

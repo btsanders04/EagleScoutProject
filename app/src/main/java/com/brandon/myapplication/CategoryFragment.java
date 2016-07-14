@@ -1,6 +1,7 @@
 package com.brandon.myapplication;
 
 import android.os.Bundle;
+import android.os.Parcelable;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -8,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.google.android.gms.vision.barcode.Barcode;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Brandon on 7/2/2016.
@@ -50,9 +54,17 @@ public class CategoryFragment extends Fragment {
             int itemPos = itemList.getItemLocation(barcode.displayValue);
             Category c = itemList.getItemCategory(itemPos);
             TabLayout.Tab currentTab = tabLayout.getTabAt(c.getPositon());
+            ArrayList<Item> categoryList = itemList.getCategoryListData(currentTab.getText().toString());
+            int catItemPos = categoryList.size();
+            for(int i = 0; i < categoryList.size(); i++){
+                if(categoryList.get(i).getBarcode().equalsIgnoreCase(barcode.displayValue)){
+                    catItemPos=i;
+                    break;
+                }
+            }
             currentTab.select();
-            argsOut.putParcelableArrayList(LIST_DATA_KEY, itemList.getCategoryListData(currentTab.getText().toString()));
-            argsOut.putInt(POSITION,itemPos);
+            argsOut.putParcelableArrayList(LIST_DATA_KEY, categoryList);
+            argsOut.putInt(POSITION,catItemPos);
         }
 //        coming from ListView
         else {
