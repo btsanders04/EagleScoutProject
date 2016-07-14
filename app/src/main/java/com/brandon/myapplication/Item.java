@@ -8,7 +8,7 @@ import com.google.android.gms.vision.barcode.Barcode;
 /**
  * Created by Brandon on 7/5/2016.
  */
-public class Item implements Parcelable {
+public class Item implements Parcelable , Comparable<Item>{
 
     private String name;
     private String description;
@@ -56,6 +56,11 @@ public class Item implements Parcelable {
     };
 //    QR ID
 
+
+    @Override
+    public int compareTo(Item item) {
+        return this.name.compareTo(item.getName());
+    }
 
     public String getDescription() {
         return description;
